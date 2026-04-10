@@ -6,7 +6,7 @@
 
 ## Demo
 
-**[▶ Watch the demo video](./demo.mp4)** &nbsp;·&nbsp; [WebM version](./demo.webm)
+https://github.com/user-attachments/assets/645e5231-9cc6-40e1-8274-89a81bfdf6b2
 
 The demo video walks through every feature:
 
