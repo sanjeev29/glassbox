@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Glassbox Test Fixture</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; }
+    textarea { width: 100%; height: 120px; }
+    #results { margin-top: 1rem; white-space: pre-wrap; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>Glassbox Test Fixture</h1>
+  <textarea id="input" placeholder="Type or paste text here..."></textarea>
+  <button id="submit">Submit</button>
+  <div id="results"></div>
+
+  <script type="module">
+    import {
+      computeHumanityScore,
+      detectPII,
+      detectSuspiciousChars,
+      redactText,
+      stripCharsByCategory,
+    } from "../src/content.ts";
+
+    // Expose pure functions to window so Playwright unit tests can call
+    // them directly via page.evaluate(...).
+    window.__glassbox = {
+      computeHumanityScore,
+      detectPII,
+      detectSuspiciousChars,
+      redactText,
+      stripCharsByCategory,
+    };
+
+    const textarea = document.getElementById("input");
+    const results = document.getElementById("results");
+
+    textarea.addEventListener("glassbox:update", (e) => {
+      const { humanityScore, piiMatches, suspiciousChars = [] } = e.detail;
+      results.textContent =
+        `Humanity Score: ${humanityScore.toFixed(2)}\n` +
+        `PII Matches: ${JSON.stringify(piiMatches)}\n` +
+        `Suspicious: ${suspiciousChars.length}`;
+      results.dataset.humanityScore = String(humanityScore);
+      results.dataset.piiCount = String(piiMatches.length);
+      results.dataset.piiLabels = piiMatches.map((m) => m.label).join(",");
+      results.dataset.suspiciousCount = String(suspiciousChars.length);
+    });
+  </script>
+</body>
+</html>
